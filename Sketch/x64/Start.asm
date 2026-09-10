@@ -33,41 +33,41 @@ _start:
 
 	; Open the file, exit if failed.
 	lea rdi, [rel Start_FileName]
-	mov rsi, 0o101
-	mov rdx, 0o666
+	mov esi, 0o101
+	mov edx, 0o666
 	mov rax, 2
 	syscall
-	cmp rax, 0
+	cmp eax, 0
 	jl Start_Error
 
-	; Save the file handle to the nonvolatile register RBX.
-	mov rbx, rax
+	; Save the file handle to the nonvolatile register EBX.
+	mov ebx, eax
 
-	; Write the vector to the file (the handle is still in RAX).
-	mov rdi, rax
+	; Write the vector to the file (the handle is still in EAX).
+	mov edi, eax
 	mov rsi, rsp
 	mov rdx, 16
 	mov rax, 1
 	syscall
 
 	; Write the initial stack pointer to the file.
-	mov rdi, rbx
+	mov edi, ebx
 	lea rsi, [rel Start_StackAlignmentTest]
 	mov rdx, 8
 	mov rax, 1
 	syscall
 
 	; Close the file.
-	mov rdi, rbx
+	mov edi, ebx
 	mov rax, 3
 	syscall
 
 	; Exit.
-	xor rdi, rdi
+	xor edi, edi
 	mov rax, 60
 	syscall
 
 	Start_Error:
-		mov rdi, 1
+		mov edi, 1
 		mov rax, 60
 		syscall
