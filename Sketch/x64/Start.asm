@@ -16,6 +16,9 @@ section .text align=32
 global _start
 align 32
 _start:
+	; Terminate stack tracing in debuggers.
+	xor rbp, rbp
+
 	; Copy the stack pointer to the variable.
 	mov [rel Start_StackAlignmentTest], rsp
 
