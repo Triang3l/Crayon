@@ -1,3 +1,5 @@
+%include "Crayon/Utility/x64/Linux.inc"
+
 section .rodata align=16
 
 	align 16
@@ -33,9 +35,9 @@ _start:
 
 	; Open the file, exit if failed.
 	lea rdi, [rel Start_FileName]
-	mov esi, 0o101
+	mov esi, cray_Util_Linux_FileModeFlags_CreateWriteOnly
 	mov edx, 0o666
-	mov rax, 2
+	mov rax, cray_Util_Linux_SysCall_open
 	syscall
 	cmp eax, 0
 	jl Start_Error
@@ -47,27 +49,27 @@ _start:
 	mov edi, eax
 	mov rsi, rsp
 	mov rdx, 16
-	mov rax, 1
+	mov rax, cray_Util_Linux_SysCall_write
 	syscall
 
 	; Write the initial stack pointer to the file.
 	mov edi, ebx
 	lea rsi, [rel Start_StackAlignmentTest]
 	mov rdx, 8
-	mov rax, 1
+	mov rax, cray_Util_Linux_SysCall_write
 	syscall
 
 	; Close the file.
 	mov edi, ebx
-	mov rax, 3
+	mov rax, cray_Util_Linux_SysCall_close
 	syscall
 
 	; Exit.
 	xor edi, edi
-	mov rax, 60
+	mov rax, cray_Util_Linux_SysCall_exit_group
 	syscall
 
 	Start_Error:
 		mov edi, 1
-		mov rax, 60
+		mov rax, cray_Util_Linux_SysCall_exit_group
 		syscall
