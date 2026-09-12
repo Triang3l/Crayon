@@ -19,7 +19,7 @@ global _start
 align 32
 _start:
 	; Terminate stack tracing in debuggers.
-	xor rbp, rbp
+	xor ebp, ebp
 
 	; Copy the stack pointer to the variable.
 	mov [rel Start_StackAlignmentTest], rsp
@@ -37,7 +37,7 @@ _start:
 	lea rdi, [rel Start_FileName]
 	mov esi, cray_Util_Linux_FileModeFlags_CreateWriteOnly
 	mov edx, 0o666
-	mov rax, cray_Util_Linux_SysCall_open
+	mov eax, cray_Util_Linux_SysCall_open
 	syscall
 	cmp eax, 0
 	jl Start_Error
@@ -48,28 +48,28 @@ _start:
 	; Write the vector to the file (the handle is still in EAX).
 	mov edi, eax
 	mov rsi, rsp
-	mov rdx, 16
-	mov rax, cray_Util_Linux_SysCall_write
+	mov edx, 16
+	mov eax, cray_Util_Linux_SysCall_write
 	syscall
 
 	; Write the initial stack pointer to the file.
 	mov edi, ebx
 	lea rsi, [rel Start_StackAlignmentTest]
-	mov rdx, 8
-	mov rax, cray_Util_Linux_SysCall_write
+	mov edx, 8
+	mov eax, cray_Util_Linux_SysCall_write
 	syscall
 
 	; Close the file.
 	mov edi, ebx
-	mov rax, cray_Util_Linux_SysCall_close
+	mov eax, cray_Util_Linux_SysCall_close
 	syscall
 
 	; Exit.
 	xor edi, edi
-	mov rax, cray_Util_Linux_SysCall_exit_group
+	mov eax, cray_Util_Linux_SysCall_exit_group
 	syscall
 
 	Start_Error:
 		mov edi, 1
-		mov rax, cray_Util_Linux_SysCall_exit_group
+		mov eax, cray_Util_Linux_SysCall_exit_group
 		syscall
